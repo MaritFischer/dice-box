@@ -81,7 +81,7 @@ self.onmessage = (e) => {
 						// toss from all edges
 						// setStartPosition()
 						if(e.data.options.newStartPoint){
-							setStartPosition()
+							setStartPosition(e.data.options.rollDirection)
 						}
             const newDie = addDie(e.data.options)
 						rollDie(newDie)
@@ -99,7 +99,7 @@ self.onmessage = (e) => {
             break;
           case "resumeSimulation":
 						if(e.data.newStartPoint){
-							setStartPosition()
+							setStartPosition(e.data.rollDirection)
 						}
             stopLoop = false
 						loop()
@@ -196,7 +196,7 @@ const setVector3 = (x,y,z) => {
 	return sharedVector3
 }
 
-const setStartPosition = () => {
+const setStartPosition = (rollDirection) => {
 	let size = config.size
 	// let envelopeSize = size * .6 / 2
 	let edgeOffset = .5
@@ -211,6 +211,22 @@ const setStartPosition = () => {
 	let tossFromLeft = Math.round(Math.random())
 	let tossX = Math.round(Math.random())
 	// console.log(`throw coming from`, tossX ? tossFromTop ? "top" : "bottom" : tossFromLeft ? "left" : "right")
+	if(rollDirection == 'left'){
+		tossX = 0;
+		tossFromLeft = 1
+	}
+	if(rollDirection == 'right'){
+		tossX = 0;
+		tossFromLeft = 0
+	}
+	if(rollDirection == 'top'){
+		tossX = 1;
+		tossFromTop = 1
+	}
+	if(rollDirection == 'bottom'){
+		tossX = 1;
+		tossFromTop = 0
+	}
 
 	// forces = {
 	// 	xMinForce: tossX ? -config.throwForce * aspect : tossFromLeft ? config.throwForce * aspect * .3 : -config.throwForce * aspect * .3,

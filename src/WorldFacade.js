@@ -389,7 +389,7 @@ class WorldFacade {
 	}
 
 	// TODO: pass data with roll - such as roll name. Passed back at the end in the results
-	roll(notation, {theme = this.config.theme, themeColor = this.config.themeColor, newStartPoint = true} = {}) {
+	roll(notation, {theme = this.config.theme, themeColor = this.config.themeColor, newStartPoint = true, rollDirection} = {}) {
 		// note: to add to a roll on screen use .add method
 		// reset the offscreen worker and physics worker with each new roll
 		this.clear()
@@ -400,7 +400,8 @@ class WorldFacade {
 			notation,
 			theme,
 			themeColor,
-			newStartPoint
+			newStartPoint, 
+			rollDirection
 		})
 
 		const parsedNotation = this.createNotationArray(notation, this.themesLoadedData[theme].diceAvailable)
@@ -410,7 +411,7 @@ class WorldFacade {
 		return this.rollCollectionData[collectionId].promise
 	}
 
-  add(notation, {theme = this.config.theme, themeColor = this.config.themeColor, newStartPoint = true} = {}) {
+  add(notation, {theme = this.config.theme, themeColor = this.config.themeColor, newStartPoint = true, rollDirection} = {}) {
 
 		const collectionId = this.#collectionIndex++
 
@@ -419,7 +420,8 @@ class WorldFacade {
 			notation,
 			theme,
 			themeColor,
-			newStartPoint
+			newStartPoint,
+			rollDirection
 		})
 		
 		const parsedNotation = this.createNotationArray(notation, this.themesLoadedData[theme].diceAvailable)
@@ -429,7 +431,7 @@ class WorldFacade {
 		return this.rollCollectionData[collectionId].promise
   }
 
-	reroll(notation, {remove = false, hide = false, newStartPoint = true} = {}) {
+	reroll(notation, {remove = false, hide = false, newStartPoint = true, rollDirection} = {}) {
 		// TODO: add hide if you want to keep the die result for an external parser
 
 		// ensure notation is an array
@@ -443,7 +445,7 @@ class WorldFacade {
 		}
 
 		// .add will return a promise that will then be returned here
-		return this.add(cleanNotation, {newStartPoint})
+		return this.add(cleanNotation, {newStartPoint, rollDirection})
 	}
 
 	remove(notation, {hide = false} = {}) {
@@ -479,6 +481,7 @@ class WorldFacade {
 
 		const collection = this.rollCollectionData[collectionId]
 		let newStartPoint = collection.newStartPoint
+		let rollDirection = collection.rollDirection
 
 		// loop through the number of dice in the group and roll each one
 		parsedNotation.forEach(async notation => {
@@ -556,6 +559,7 @@ class WorldFacade {
 					this.#DiceWorld.add({
 						...roll,
 						newStartPoint,
+						rollDirection,
 						theme: parentTheme?.systemName || theme,
 						meshName: parentTheme?.meshName || meshName,
 						colorSuffix

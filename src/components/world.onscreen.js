@@ -254,6 +254,7 @@ class WorldOnscreen {
 				scale: this.config.scale,
 				id: newDie.id,
 				newStartPoint: options.newStartPoint,
+				rollDirection: options.rollDirection,
 				theme: options.theme,
 				meshName: options.meshName,
 			}
